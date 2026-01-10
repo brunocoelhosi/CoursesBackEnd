@@ -16,3 +16,10 @@ class CourseOut(Schema):
     published: bool
     image_url: str | None
 
+class CourseUpdate(Schema):
+    id: int
+    title: str
+    description: str
+    workload: int
+    published: bool
+    image_url: str | None

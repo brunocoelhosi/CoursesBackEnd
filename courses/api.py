@@ -1,6 +1,6 @@
 from ninja import Router
 from typing import List
-from courses.schemas import CourseOut, CourseIn
+from courses.schemas import CourseOut, CourseIn, CourseUpdate
 from django.shortcuts import get_object_or_404
 from courses.models import Course
 
@@ -33,7 +33,7 @@ def create_course(request, payload: CourseIn):
     return course
 
 @router.put("/{course_id}", response=CourseOut)
-def update_course(request, course_id: int, payload: CourseIn):
+def update_course(request, course_id: int, payload: CourseUpdate):
     return CourseService.update(course_id, payload.dict())
 
 @router.delete("/{course_id}")
