@@ -139,7 +139,26 @@ def delete_course(request, course_id: int):
     CourseService.delete(course_id)
     return {"success": True}
 
-@router.get("/{course_id}/video", response=CourseVideoOut, auth=JWTAuth())
+@router.get("/{course_id}/video",
+            response=CourseVideoOut,
+            auth=JWTAuth(),
+            summary="Retorna o video relacionado ao curso",
+            description=
+            """
+            Retorna o video relacionado ao curso"
+
+                Parâmetros:
+                    
+                    - id: ID do curso
+
+                Retorna:
+
+                    200 - OK.
+
+                Erro: 
+                    Unauthorized.
+
+            """,)
 def get_course_video(request, course_id: int):
     course = get_object_or_404(Course, id=course_id)
 
@@ -156,12 +175,49 @@ def get_course_video(request, course_id: int):
     }
 
 
-@router.get("/my/", response=List[CourseOut], auth=JWTAuth())
+@router.get("/my/",
+            response=List[CourseOut],
+            auth=JWTAuth(),
+            summary="Retorna os cursos em que o usuário esta matriculado",
+            description=
+            """
+            Retorna os cursos em que o usuário esta matriculado"
+
+                Parâmetros:
+                    
+                    - Nenhum
+
+                Retorna:
+
+                    200 - OK.
+
+                Erro: 
+                    Unauthorized.
+
+            """,)
 def my_courses(request):
     enrollments = Enrollment.objects.filter(user=request.user).select_related("course")
     return [e.course for e in enrollments]
 
-@router.post("/enroll/",summary="Matricula em um curso", auth=JWTAuth())
+@router.post("/enroll/",
+            auth=JWTAuth(),
+            summary="Realiza a matricula em um curso",
+            description=
+            """
+            Realiza a matricula em um curso "
+
+                Parâmetros:
+                    
+                    - course_id : ID do curso
+
+                Retorna:
+
+                    200 - OK.
+
+                Erro: 
+                    Unauthorized.
+
+            """,)
 def enroll_course(request, payload: EnrollmentIn):
     course = get_object_or_404(Course, id=payload.course_id)
 
