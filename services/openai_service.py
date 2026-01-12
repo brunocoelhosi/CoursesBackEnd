@@ -20,7 +20,7 @@ def generate_course_image(title: str, description: str) -> str:
     )
 
     response = client.images.generate(
-        model="gpt-image-1",
+        model="gpt-image-1-mini",
         prompt=prompt,
         size="1024x1024"
     )
