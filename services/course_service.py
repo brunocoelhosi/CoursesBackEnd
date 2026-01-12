@@ -2,6 +2,8 @@ from courses.models import Course
 from django.shortcuts import get_object_or_404
 from services.openai_service import generate_course_image
 from courses.schemas import CourseIn
+from courses.tasks import generate_course_image_task
+
 class CourseService:
 
     @staticmethod
@@ -12,7 +14,7 @@ class CourseService:
     def get(course_id: int):
         return get_object_or_404(Course, id=course_id)
 
-    
+    """    
     @staticmethod
     def create(data: dict):
         if "image_url" not in data or not data["image_url"]:
@@ -21,12 +23,19 @@ class CourseService:
                 description=data.get("description", ""),
             )
 
-        return Course.objects.create(**data)
-
-    """@staticmethod
+        return Course.objects.create(**data)"""
+    @staticmethod
     def create(data: dict):
-        return Course.objects.create(**data)
-    """
+        # 1️⃣ NÃO gera imagem aqui
+        data["image_url"] = None
+
+        # 2️⃣ Cria o curso imediatamente
+        course = Course.objects.create(**data)
+
+        # 3️⃣ Dispara geração assíncrona
+        generate_course_image_task.delay(course.id)
+
+        return course
 
     @staticmethod
     def update(course_id: int, data: dict):

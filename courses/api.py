@@ -174,3 +174,4 @@ def enroll_course(request, payload: EnrollmentIn):
         return 200, {"detail": "Usuário já matriculado"}
 
     return {"success": True}
+    
